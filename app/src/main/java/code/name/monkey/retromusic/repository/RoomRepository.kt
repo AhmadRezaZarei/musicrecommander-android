@@ -130,8 +130,9 @@ class RealRoomRepository(
     override suspend fun removeSongFromPlaylist(songEntity: SongEntity) =
         playlistDao.deleteSongFromPlaylist(songEntity.playlistCreatorId, songEntity.id)
 
-    override suspend fun upsertSongInHistory(currentSong: Song) =
+    override suspend fun upsertSongInHistory(currentSong: Song) {
         historyDao.upsertSongInHistory(currentSong.toHistoryEntity(System.currentTimeMillis()))
+    }
 
     override fun observableHistorySongs(): LiveData<List<HistoryEntity>> =
         historyDao.observableHistorySongs()

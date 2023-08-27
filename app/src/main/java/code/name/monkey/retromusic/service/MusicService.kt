@@ -60,6 +60,8 @@ import code.name.monkey.retromusic.helper.ShuffleHelper.makeShuffleList
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.model.Song.Companion.emptySong
 import code.name.monkey.retromusic.model.smartplaylist.AbsSmartPlaylist
+import code.name.monkey.retromusic.network.PingResponse
+import code.name.monkey.retromusic.network.RecommanderService
 import code.name.monkey.retromusic.providers.HistoryStore
 import code.name.monkey.retromusic.providers.MusicPlaybackQueueStore
 import code.name.monkey.retromusic.providers.SongPlayCountStore
@@ -94,7 +96,11 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import org.koin.java.KoinJavaComponent.get
+import retrofit2.Call
+import retrofit2.Response
 import java.util.*
+import javax.security.auth.callback.Callback
+import kotlin.math.log
 
 
 /**
@@ -799,6 +805,22 @@ class MusicService : MediaBrowserServiceCompat(),
             notHandledMetaChangedForCurrentTrack = false
         }
         notifyChange(PLAY_STATE_CHANGED)
+
+        // TODO make api call year and upload
+        this.currentSong.id
+        val srv = RecommanderService.invoke()
+        srv.ping().enqueue(object: retrofit2.Callback<PingResponse> {
+            override fun onResponse(call: Call<PingResponse>, response: Response<PingResponse>) {
+                Log.e("MusicService", "onResponse: " + response.code())
+            }
+
+            override fun onFailure(call: Call<PingResponse>, t: Throwable) {
+                Log.e("MusicService", "onFailure: " + t.message)
+            }
+
+        })
+        Log.e("MusicService", "play: called" + this.currentSong.title )
+
     }
 
     fun playNextSong(force: Boolean) {
