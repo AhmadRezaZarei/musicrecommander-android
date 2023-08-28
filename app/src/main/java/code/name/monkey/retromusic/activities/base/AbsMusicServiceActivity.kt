@@ -18,6 +18,7 @@ import android.Manifest
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import code.name.monkey.appthemehelper.util.VersionUtils
@@ -131,6 +132,7 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
 
             repository.upsertSongInPlayCount(song)
         }
+        // upload current song first 30s 
     }
 
     override fun onQueueChanged() {
@@ -211,6 +213,7 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
                     SHUFFLE_MODE_CHANGED -> activity.onShuffleModeChanged()
                     MEDIA_STORE_CHANGED -> activity.onMediaStoreChanged()
                 }
+                Log.e("AbsMusicServiceActivity", "onReceive: action: " + action)
             }
         }
     }

@@ -47,6 +47,7 @@
         android:theme="@style/Theme.RetroMusic.FollowSystem"
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
+
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"
@@ -134,6 +135,7 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:showOnLockScreen="true" />
+
         <activity
             android:name=".fragments.backup.RestoreActivity"
             android:excludeFromRecents="false"
@@ -240,6 +242,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_classic_info" />
         </receiver>
+
         <receiver
             android:name=".appwidgets.AppWidgetSmall"
             android:exported="true"
@@ -252,6 +255,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_small_info" />
         </receiver>
+
         <receiver
             android:name=".appwidgets.AppWidgetText"
             android:exported="true"
@@ -264,6 +268,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_text" />
         </receiver>
+
         <receiver
             android:name=".appwidgets.AppWidgetCard"
             android:exported="true"

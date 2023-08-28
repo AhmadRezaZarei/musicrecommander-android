@@ -18,6 +18,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.contains
 import androidx.navigation.ui.setupWithNavController
@@ -30,19 +31,26 @@ import code.name.monkey.retromusic.interfaces.IScrollHelper
 import code.name.monkey.retromusic.model.CategoryInfo
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.repository.PlaylistSongsLoader
+import code.name.monkey.retromusic.repository.RealRepository
 import code.name.monkey.retromusic.service.MusicService
 import code.name.monkey.retromusic.util.AppRater
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.logE
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
+import org.koin.androidx.scope.activityScope
 
 class MainActivity : AbsCastActivity() {
     companion object {
         const val TAG = "MainActivity"
         const val EXPAND_PANEL = "expand_panel"
     }
+
+    private val repository: RealRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +62,9 @@ class MainActivity : AbsCastActivity() {
         setupNavigationController()
 
         WhatsNewFragment.showChangeLog(this)
+
+        // upload history
+      //  Log.e("MainActivity: ", " " + songs.size)
     }
 
     private fun setupNavigationController() {

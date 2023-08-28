@@ -171,4 +171,7 @@ dependencies {
     implementation libs.fastscroll.library
     implementation libs.customactivityoncrash
     implementation libs.tankery.circularSeekBar
+
+//    api project(path: ':AudioTrimmer')
+
 }

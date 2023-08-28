@@ -17,6 +17,7 @@ package code.name.monkey.retromusic.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 @Entity
 class HistoryEntity(
@@ -28,19 +29,33 @@ class HistoryEntity(
     val year: Int,
     val duration: Long,
     val data: String,
+
     @ColumnInfo(name = "date_modified")
+    @SerializedName("date_modified")
     val dateModified: Long,
+
     @ColumnInfo(name = "album_id")
+    @SerializedName("album_id")
     val albumId: Long,
+
     @ColumnInfo(name = "album_name")
+    @SerializedName("album_name")
     val albumName: String,
+
     @ColumnInfo(name = "artist_id")
+    @SerializedName("artist_id")
     val artistId: Long,
+
     @ColumnInfo(name = "artist_name")
+    @SerializedName("artist_name")
     val artistName: String,
     val composer: String?,
+
     @ColumnInfo(name = "album_artist")
+    @SerializedName("album_artist")
     val albumArtist: String?,
+
     @ColumnInfo(name = "time_played")
+    @SerializedName("time_played")
     val timePlayed: Long
 )
