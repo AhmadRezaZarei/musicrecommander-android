@@ -26,6 +26,7 @@ import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.db.toPlayCount
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
+import code.name.monkey.retromusic.model.SongLog
 import code.name.monkey.retromusic.repository.RealRepository
 import code.name.monkey.retromusic.service.MusicService.Companion.FAVORITE_STATE_CHANGED
 import code.name.monkey.retromusic.service.MusicService.Companion.MEDIA_STORE_CHANGED
@@ -34,12 +35,14 @@ import code.name.monkey.retromusic.service.MusicService.Companion.PLAY_STATE_CHA
 import code.name.monkey.retromusic.service.MusicService.Companion.QUEUE_CHANGED
 import code.name.monkey.retromusic.service.MusicService.Companion.REPEAT_MODE_CHANGED
 import code.name.monkey.retromusic.service.MusicService.Companion.SHUFFLE_MODE_CHANGED
+import code.name.monkey.retromusic.service.MusicService.Companion.SONG_LOG_CREATED
 import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.logD
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import java.lang.ref.WeakReference
+import kotlin.math.log
 
 abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventListener {
 
@@ -97,7 +100,7 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
             filter.addAction(QUEUE_CHANGED)
             filter.addAction(MEDIA_STORE_CHANGED)
             filter.addAction(FAVORITE_STATE_CHANGED)
-
+            filter.addAction(SONG_LOG_CREATED)
             ContextCompat.registerReceiver(this, musicStateReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
             receiverRegistered = true
         }
@@ -131,8 +134,12 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
                 ?: MusicPlayerRemote.currentSong.toPlayCount()
 
             repository.upsertSongInPlayCount(song)
+
         }
-        // upload current song first 30s 
+        // upload current song first 30s
+
+
+
     }
 
     override fun onQueueChanged() {
@@ -212,8 +219,13 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
                     REPEAT_MODE_CHANGED -> activity.onRepeatModeChanged()
                     SHUFFLE_MODE_CHANGED -> activity.onShuffleModeChanged()
                     MEDIA_STORE_CHANGED -> activity.onMediaStoreChanged()
+                    SONG_LOG_CREATED -> {
+                        val tmp = intent.getIntExtra("tmp", -1)
+                        val log = intent.getParcelableExtra<SongLog>("song_log")
+                        Log.e("AbsMusicServiceActivity", "songlog: " + tmp + " " + (log == null) + " "  + ((log?.songEndAt ?: 0) - (log?.songStartedAt ?: 0)) )
+                    }
                 }
-                Log.e("AbsMusicServiceActivity", "onReceive: action: " + action)
+//                Log.e("AbsMusicServiceActivity", "onReceive: action: " + action)
             }
         }
     }

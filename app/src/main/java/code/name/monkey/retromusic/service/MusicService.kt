@@ -59,9 +59,8 @@ import code.name.monkey.retromusic.glide.RetroGlideExtension.songCoverOptions
 import code.name.monkey.retromusic.helper.ShuffleHelper.makeShuffleList
 import code.name.monkey.retromusic.model.Song
 import code.name.monkey.retromusic.model.Song.Companion.emptySong
+import code.name.monkey.retromusic.model.SongLog
 import code.name.monkey.retromusic.model.smartplaylist.AbsSmartPlaylist
-import code.name.monkey.retromusic.network.PingResponse
-import code.name.monkey.retromusic.network.RecommanderService
 import code.name.monkey.retromusic.providers.HistoryStore
 import code.name.monkey.retromusic.providers.MusicPlaybackQueueStore
 import code.name.monkey.retromusic.providers.SongPlayCountStore
@@ -96,11 +95,7 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import org.koin.java.KoinJavaComponent.get
-import retrofit2.Call
-import retrofit2.Response
 import java.util.*
-import javax.security.auth.callback.Callback
-import kotlin.math.log
 
 
 /**
@@ -705,6 +700,12 @@ class MusicService : MediaBrowserServiceCompat(),
 
     override fun onTrackEnded() {
         acquireWakeLock()
+
+
+        songLog?.songEndAt = playbackManager.songProgressMillis
+        notifyChange(SONG_LOG_CREATED)
+        songLog = null
+
         // if there is a timer finished, don't continue
         if (pendingQuit
             || repeatMode == REPEAT_MODE_NONE && isLastTrack
@@ -719,6 +720,9 @@ class MusicService : MediaBrowserServiceCompat(),
             playNextSong(false)
         }
         releaseWakeLock()
+
+
+
     }
 
     override fun onTrackEndedWithCrossfade() {
@@ -792,11 +796,22 @@ class MusicService : MediaBrowserServiceCompat(),
     }
 
     fun pause(force: Boolean = false) {
+
+
+        val a = 2
+
+
+//        Log.e("MusicService", "pause: " + playbackManager.songProgressMillis + " " + playbackManager.songDurationMillis)
         playbackManager.pause(force) {
+            songLog?.songEndAt = playbackManager.songProgressMillis
+            Log.e("MusicService", "pause: called")
+            notifyChange(SONG_LOG_CREATED)
+            songLog = null
             notifyChange(PLAY_STATE_CHANGED)
         }
     }
 
+    var songLog: SongLog? = null
     @Synchronized
     fun play() {
         playbackManager.play { playSongAt(getPosition()) }
@@ -806,32 +821,51 @@ class MusicService : MediaBrowserServiceCompat(),
         }
         notifyChange(PLAY_STATE_CHANGED)
 
-        // TODO make api call year and upload
-        this.currentSong.id
-        val srv = RecommanderService.invoke()
-        srv.ping().enqueue(object: retrofit2.Callback<PingResponse> {
-            override fun onResponse(call: Call<PingResponse>, response: Response<PingResponse>) {
-                Log.e("MusicService", "onResponse: " + response.code())
-            }
-
-            override fun onFailure(call: Call<PingResponse>, t: Throwable) {
-                Log.e("MusicService", "onFailure: " + t.message)
-            }
-
-        })
-        Log.e("MusicService", "play: called" + this.currentSong.title )
-
+        Log.e("MusicService", "play: " + playbackManager.songProgressMillis + " " + playbackManager.songDurationMillis)
+        // TODO: make api call year and upload
+//        this.currentSong.id
+//        val srv = RecommanderService.invoke()
+//        srv.ping().enqueue(object: retrofit2.Callback<PingResponse> {
+//            override fun onResponse(call: Call<PingResponse>, response: Response<PingResponse>) {
+//                Log.e("MusicService", "onResponse: " + response.code())
+//            }
+//
+//            override fun onFailure(call: Call<PingResponse>, t: Throwable) {
+//                Log.e("MusicService", "onFailure: " + t.message)
+//            }
+//
+//        })
+//        Log.e("MusicService", "play: called" + this.currentSong.title )
+//        AudioUtils.trim(currentSong.data, "/storage/emulated/0/Download/temp.mp3", 0, 20)
+//
+//        Log.e("MusicService", "play: " + currentSong.data)
     }
 
     fun playNextSong(force: Boolean) {
+        Log.e("MusicService", "playNextSong: ", )
         playSongAt(getNextPosition(force))
     }
 
     fun playPreviousSong(force: Boolean) {
+        Log.e("MusicService", "playPreviousSong: ", )
         playSongAt(getPreviousPosition(force))
     }
 
     fun playSongAt(position: Int) {
+
+        Log.e("MusicService", "playSongAt" )
+        if (songLog == null) {
+            Log.e("MusicService", "playSongAt null" )
+            songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
+        } else {
+            Log.e("MusicService", "playSongAt not null" )
+            songLog?.songEndAt = playbackManager.songProgressMillis
+            notifyChange(SONG_LOG_CREATED)
+            songLog = null
+        }
+
+
+
         // Every chromecast method needs to run on main thread or you are greeted with IllegalStateException
         // So it will use Main dispatcher
         // And by using Default dispatcher for local playback we are reduce the burden of main thread
@@ -839,6 +873,7 @@ class MusicService : MediaBrowserServiceCompat(),
             openTrackAndPrepareNextAt(position) { success ->
                 if (success) {
                     play()
+                    songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
                 } else {
                     runOnUiThread {
                         showToast(R.string.unplayable_file)
@@ -1015,8 +1050,12 @@ class MusicService : MediaBrowserServiceCompat(),
         intent.putExtra("position", songProgressMillis.toLong())
         intent.putExtra("playing", isPlaying)
         intent.putExtra("scrobbling_source", RETRO_MUSIC_PACKAGE_NAME)
+        intent.putExtra("tmp", 23)
+        songLog?.let {
+            intent.putExtra("song_log", it)
+        }
         @Suppress("Deprecation")
-        sendStickyBroadcast(intent)
+        sendBroadcast(intent)
     }
 
     fun toggleShuffle() {
@@ -1425,6 +1464,7 @@ class MusicService : MediaBrowserServiceCompat(),
         const val REPEAT_MODE_CHANGED = "$RETRO_MUSIC_PACKAGE_NAME.repeatmodechanged"
         const val SHUFFLE_MODE_CHANGED = "$RETRO_MUSIC_PACKAGE_NAME.shufflemodechanged"
         const val MEDIA_STORE_CHANGED = "$RETRO_MUSIC_PACKAGE_NAME.mediastorechanged"
+        const val SONG_LOG_CREATED = "$RETRO_MUSIC_PACKAGE_NAME.songlogcreated"
         const val CYCLE_REPEAT = "$RETRO_MUSIC_PACKAGE_NAME.cyclerepeat"
         const val TOGGLE_SHUFFLE = "$RETRO_MUSIC_PACKAGE_NAME.toggleshuffle"
         const val TOGGLE_FAVORITE = "$RETRO_MUSIC_PACKAGE_NAME.togglefavorite"
