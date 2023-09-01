@@ -10,6 +10,7 @@ import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.
 import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.PLAYLIST_SONG_COUNT_DESC
 import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.PLAYLIST_Z_A
 import code.name.monkey.retromusic.model.Song
+import code.name.monkey.retromusic.model.SongLog
 import code.name.monkey.retromusic.util.PreferenceUtil
 
 
@@ -31,6 +32,11 @@ interface RoomRepository {
     suspend fun isFavoriteSong(songEntity: SongEntity): List<SongEntity>
     suspend fun removeSongFromPlaylist(songEntity: SongEntity)
     suspend fun upsertSongInHistory(currentSong: Song)
+
+    suspend fun insertSongLog(songLogEntity: SongLogEntity)
+
+    suspend fun getAllSongLogs(): List<SongLogEntity>
+
     suspend fun favoritePlaylistSongs(favorite: String): List<SongEntity>
     suspend fun upsertSongInPlayCount(playCountEntity: PlayCountEntity)
     suspend fun deleteSongInPlayCount(playCountEntity: PlayCountEntity)
@@ -47,7 +53,8 @@ interface RoomRepository {
 class RealRoomRepository(
     private val playlistDao: PlaylistDao,
     private val playCountDao: PlayCountDao,
-    private val historyDao: HistoryDao
+    private val historyDao: HistoryDao,
+    private val songLogDao: SongLogDao
 ) : RoomRepository {
     @WorkerThread
     override suspend fun createPlaylist(playlistEntity: PlaylistEntity): Long =
@@ -133,6 +140,15 @@ class RealRoomRepository(
     override suspend fun upsertSongInHistory(currentSong: Song) {
         historyDao.upsertSongInHistory(currentSong.toHistoryEntity(System.currentTimeMillis()))
     }
+
+    override suspend fun insertSongLog(songLogEntity: SongLogEntity) {
+        songLogDao.addSongLog(songLogEntity)
+    }
+
+    override suspend fun getAllSongLogs(): List<SongLogEntity> {
+        return songLogDao.getAllSongLogEntities()
+    }
+
 
     override fun observableHistorySongs(): LiveData<List<HistoryEntity>> =
         historyDao.observableHistorySongs()

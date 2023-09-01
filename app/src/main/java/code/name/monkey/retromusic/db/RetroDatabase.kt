@@ -26,4 +26,5 @@ abstract class RetroDatabase : RoomDatabase() {
     abstract fun playlistDao(): PlaylistDao
     abstract fun playCountDao(): PlayCountDao
     abstract fun historyDao(): HistoryDao
+    abstract fun songLogDao(): SongLogDao
 }

@@ -57,8 +57,12 @@ private val roomModule = module {
         get<RetroDatabase>().historyDao()
     }
 
+    factory {
+        get<RetroDatabase>().songLogDao()
+    }
+
     single {
-        RealRoomRepository(get(), get(), get())
+        RealRoomRepository(get(), get(), get(), get())
     } bind RoomRepository::class
 }
 private val autoModule = module {

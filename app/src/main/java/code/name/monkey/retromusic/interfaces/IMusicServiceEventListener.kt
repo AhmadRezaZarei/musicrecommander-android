@@ -14,8 +14,6 @@
  */
 package code.name.monkey.retromusic.interfaces
 
-import code.name.monkey.retromusic.model.SongLog
-
 interface IMusicServiceEventListener {
     fun onServiceConnected()
 

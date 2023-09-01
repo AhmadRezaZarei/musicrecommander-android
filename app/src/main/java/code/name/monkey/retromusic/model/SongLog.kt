@@ -1,8 +1,9 @@
 package code.name.monkey.retromusic.model
 
 import android.os.Parcelable
-import android.util.Log
+import code.name.monkey.retromusic.model.Song
 import kotlinx.parcelize.Parcelize
+
 
 @Parcelize
 open class SongLog(

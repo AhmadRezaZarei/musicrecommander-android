@@ -701,10 +701,16 @@ class MusicService : MediaBrowserServiceCompat(),
     override fun onTrackEnded() {
         acquireWakeLock()
 
+        if(songLog == null) {
+            songLog = SongLog(currentSong, 0, playbackManager.songDurationMillis, System.currentTimeMillis())
+        }
 
         songLog?.songEndAt = playbackManager.songProgressMillis
+        lastSongLog = songLog
         notifyChange(SONG_LOG_CREATED)
         songLog = null
+
+
 
         // if there is a timer finished, don't continue
         if (pendingQuit
@@ -798,72 +804,61 @@ class MusicService : MediaBrowserServiceCompat(),
     fun pause(force: Boolean = false) {
 
 
-        val a = 2
 
+        if (songLog == null) {
+            songLog = SongLog(currentSong, 0, playbackManager.songProgressMillis, System.currentTimeMillis())
+        }
 
-//        Log.e("MusicService", "pause: " + playbackManager.songProgressMillis + " " + playbackManager.songDurationMillis)
+        songLog?.songEndAt = playbackManager.songProgressMillis
+        lastSongLog = songLog
+        notifyChange(SONG_LOG_CREATED)
+        songLog = null
+
         playbackManager.pause(force) {
-            songLog?.songEndAt = playbackManager.songProgressMillis
-            Log.e("MusicService", "pause: called")
-            notifyChange(SONG_LOG_CREATED)
-            songLog = null
             notifyChange(PLAY_STATE_CHANGED)
         }
     }
 
     var songLog: SongLog? = null
+    var lastSongLog: SongLog? = null
+    var i = 3;
     @Synchronized
     fun play() {
+
+        if(songLog == null) {
+            songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
+        }
+        
+        
+
+
         playbackManager.play { playSongAt(getPosition()) }
         if (notHandledMetaChangedForCurrentTrack) {
             handleChangeInternal(META_CHANGED)
             notHandledMetaChangedForCurrentTrack = false
         }
         notifyChange(PLAY_STATE_CHANGED)
-
-        Log.e("MusicService", "play: " + playbackManager.songProgressMillis + " " + playbackManager.songDurationMillis)
-        // TODO: make api call year and upload
-//        this.currentSong.id
-//        val srv = RecommanderService.invoke()
-//        srv.ping().enqueue(object: retrofit2.Callback<PingResponse> {
-//            override fun onResponse(call: Call<PingResponse>, response: Response<PingResponse>) {
-//                Log.e("MusicService", "onResponse: " + response.code())
-//            }
-//
-//            override fun onFailure(call: Call<PingResponse>, t: Throwable) {
-//                Log.e("MusicService", "onFailure: " + t.message)
-//            }
-//
-//        })
-//        Log.e("MusicService", "play: called" + this.currentSong.title )
-//        AudioUtils.trim(currentSong.data, "/storage/emulated/0/Download/temp.mp3", 0, 20)
-//
-//        Log.e("MusicService", "play: " + currentSong.data)
+        
     }
 
     fun playNextSong(force: Boolean) {
-        Log.e("MusicService", "playNextSong: ", )
         playSongAt(getNextPosition(force))
     }
 
     fun playPreviousSong(force: Boolean) {
-        Log.e("MusicService", "playPreviousSong: ", )
         playSongAt(getPreviousPosition(force))
     }
 
     fun playSongAt(position: Int) {
 
-        Log.e("MusicService", "playSongAt" )
         if (songLog == null) {
-            Log.e("MusicService", "playSongAt null" )
             songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
         } else {
-            Log.e("MusicService", "playSongAt not null" )
             songLog?.songEndAt = playbackManager.songProgressMillis
+            lastSongLog = songLog
             notifyChange(SONG_LOG_CREATED)
             songLog = null
         }
-
 
 
         // Every chromecast method needs to run on main thread or you are greeted with IllegalStateException
@@ -873,7 +868,6 @@ class MusicService : MediaBrowserServiceCompat(),
             openTrackAndPrepareNextAt(position) { success ->
                 if (success) {
                     play()
-                    songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
                 } else {
                     runOnUiThread {
                         showToast(R.string.unplayable_file)

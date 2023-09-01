@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import code.name.monkey.appthemehelper.util.VersionUtils
 import code.name.monkey.retromusic.R
+import code.name.monkey.retromusic.db.SongLogEntity
 import code.name.monkey.retromusic.db.toPlayCount
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
@@ -42,7 +43,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import java.lang.ref.WeakReference
-import kotlin.math.log
 
 abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventListener {
 
@@ -203,6 +203,14 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
         }.toTypedArray()
     }
 
+    fun onSongLogAdded(log: SongLog) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            log.song?.let { song ->
+                repository.insertSongLog(SongLogEntity(id = 0,song = song, songStartedAt = log.songStartedAt, songEndAt = log.songEndAt, timestamp = log.timestamp))
+            }
+        }
+
+    }
     private class MusicStateReceiver(activity: AbsMusicServiceActivity) : BroadcastReceiver() {
 
         private val reference: WeakReference<AbsMusicServiceActivity> = WeakReference(activity)
@@ -220,9 +228,10 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
                     SHUFFLE_MODE_CHANGED -> activity.onShuffleModeChanged()
                     MEDIA_STORE_CHANGED -> activity.onMediaStoreChanged()
                     SONG_LOG_CREATED -> {
-                        val tmp = intent.getIntExtra("tmp", -1)
-                        val log = intent.getParcelableExtra<SongLog>("song_log")
-                        Log.e("AbsMusicServiceActivity", "songlog: " + tmp + " " + (log == null) + " "  + ((log?.songEndAt ?: 0) - (log?.songStartedAt ?: 0)) )
+                        val log = MusicPlayerRemote.musicService?.lastSongLog
+                        if(log != null) {
+                            activity.onSongLogAdded(log)
+                        }
                     }
                 }
 //                Log.e("AbsMusicServiceActivity", "onReceive: action: " + action)
