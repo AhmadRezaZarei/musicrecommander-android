@@ -65,6 +65,7 @@ private val roomModule = module {
         RealRoomRepository(get(), get(), get(), get())
     } bind RoomRepository::class
 }
+
 private val autoModule = module {
     single {
         AutoMusicProvider(

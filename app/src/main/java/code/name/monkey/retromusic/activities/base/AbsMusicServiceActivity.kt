@@ -28,6 +28,8 @@ import code.name.monkey.retromusic.db.toPlayCount
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.interfaces.IMusicServiceEventListener
 import code.name.monkey.retromusic.model.SongLog
+import code.name.monkey.retromusic.network.BaseResponse
+import code.name.monkey.retromusic.network.RecommanderService
 import code.name.monkey.retromusic.repository.RealRepository
 import code.name.monkey.retromusic.service.MusicService.Companion.FAVORITE_STATE_CHANGED
 import code.name.monkey.retromusic.service.MusicService.Companion.MEDIA_STORE_CHANGED
@@ -41,8 +43,16 @@ import code.name.monkey.retromusic.util.PreferenceUtil
 import code.name.monkey.retromusic.util.logD
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.Callback
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.android.ext.android.inject
+import retrofit2.Call
+import retrofit2.Response
 import java.lang.ref.WeakReference
+
 
 abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventListener {
 
@@ -207,6 +217,39 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
         lifecycleScope.launch(Dispatchers.IO) {
             log.song?.let { song ->
                 repository.insertSongLog(SongLogEntity(id = 0,song = song, songStartedAt = log.songStartedAt, songEndAt = log.songEndAt, timestamp = log.timestamp))
+
+
+
+                val srv = RecommanderService.invoke()
+                srv.uploadSongLog(
+                    songFile = null,
+                    songId = song.id.toString().toRequestBody("text/plain".toMediaType()),
+                    songTitle = song.title.toRequestBody("text/plain".toMediaType()),
+                    year = song.year.toString().toRequestBody("text/plain".toMediaType()),
+                    duration = song.duration.toString().toRequestBody("text/plain".toMediaType()),
+                    date = song.data.toRequestBody("text/plain".toMediaType()),
+                    albumId = song.albumId.toString().toRequestBody("text/plain".toMediaType()),
+                    albumName = song.albumName.toRequestBody("text/plain".toMediaType()),
+                    composer = song.composer?.toRequestBody("text/plain".toMediaType()),
+                    artistName = song.artistName.toRequestBody("text/plain".toMediaType()),
+                    albumArtist = song.albumArtist?.toRequestBody("text/plain".toMediaType()),
+                    songStartedAt = log.songStartedAt.toString().toRequestBody("text/plain".toMediaType()),
+                    songEndedAt = log.songEndAt.toString().toRequestBody("text/plain".toMediaType()),
+                    timestamp = log.timestamp.toString().toRequestBody("text/plain".toMediaType()),
+                    artistId = song.artistId.toString().toRequestBody()
+                ).enqueue(object: retrofit2.Callback<BaseResponse> {
+                    override fun onResponse(
+                        call: Call<BaseResponse>,
+                        response: Response<BaseResponse>
+                    ) {
+                        Log.e("AbsMusicService", "onResponse: ", )
+                    }
+
+                    override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+                        Log.e("AbsMusicService", "onFailure: " + t.message)
+                    }
+
+                })
             }
         }
 

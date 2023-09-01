@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class SongLogEntity (
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name="row_id")
     val id: Long,
     @Embedded
     val song: Song,
