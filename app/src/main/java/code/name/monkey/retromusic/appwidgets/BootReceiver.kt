@@ -20,13 +20,16 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import code.name.monkey.retromusic.service.MusicService
+import code.name.monkey.retromusic.util.ScheduleUtil
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val widgetManager = AppWidgetManager.getInstance(context)
-
         // Start music service if there are any existing widgets
+
+
         if (widgetManager.getAppWidgetIds(
                 ComponentName(
                     context, AppWidgetBig::class.java
@@ -50,5 +53,12 @@ class BootReceiver : BroadcastReceiver() {
                 context.startService(serviceIntent)
             }
         }
+
+
+        // start upload music job service
+        Log.e("BootReceiver", "onReceive: start job")
+        ScheduleUtil.scheduleJob(context)
+
+
     }
 }

@@ -30,6 +30,13 @@
         android:name="android.permission.BLUETOOTH_CONNECT"
         android:usesPermissionFlags="neverForLocation"
         tools:targetApi="s" />
+    <!--
+    This is not that important, it's just here so that we can query equalizer package
+    and check if it's present on A11+ because of Package visibility restrictions.
+    -->
+    <queries>
+        <package android:name="com.android.musicfx" />
+    </queries>
 
     <application
         android:name=".App"
@@ -47,6 +54,19 @@
         android:theme="@style/Theme.RetroMusic.FollowSystem"
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
+        <service
+            android:name=".service.recommander.UploadMusicJobService"
+            android:enabled="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true">
+        </service>
+
+<!--        <receiver android:name=".receiver.BootBroadcastReceiver"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
 
         <activity
             android:name=".activities.MainActivity"
@@ -63,6 +83,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -135,7 +156,6 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:showOnLockScreen="true" />
-
         <activity
             android:name=".fragments.backup.RestoreActivity"
             android:excludeFromRecents="false"
@@ -151,7 +171,6 @@
                 <data android:mimeType="application/octet-stream" />
                 <data android:mimeType="application/x-zip-compressed" />
                 <data android:mimeType="application/zip" />
-
                 <data android:scheme="file" />
                 <data android:scheme="content" />
                 <data android:mimeType="*/*" />
@@ -172,16 +191,13 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.rmbak" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".appshortcuts.AppShortcutLauncherActivity"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <activity
             android:name=".activities.saf.SAFGuideActivity"
             android:theme="@style/Theme.Intro" />
-
         <activity
             android:name=".activities.ErrorActivity"
             android:exported="true">
@@ -207,7 +223,6 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".appwidgets.BootReceiver"
             android:exported="true">
@@ -216,7 +231,6 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".appwidgets.AppWidgetBig"
             android:exported="true"
@@ -229,7 +243,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_big_info" />
         </receiver>
-
         <receiver
             android:name=".appwidgets.AppWidgetClassic"
             android:exported="true"
@@ -242,7 +255,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_classic_info" />
         </receiver>
-
         <receiver
             android:name=".appwidgets.AppWidgetSmall"
             android:exported="true"
@@ -255,7 +267,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_small_info" />
         </receiver>
-
         <receiver
             android:name=".appwidgets.AppWidgetText"
             android:exported="true"
@@ -268,7 +279,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/app_widget_text" />
         </receiver>
-
         <receiver
             android:name=".appwidgets.AppWidgetCard"
             android:exported="true"
@@ -319,12 +329,9 @@
         <meta-data
             android:name="android.max_aspect"
             android:value="2.1" />
-
         <meta-data
             android:name="com.lge.support.SPLIT_WINDOW"
-            android:value="true" />
-
-        <!-- Android Auto -->
+            android:value="true" /> <!-- Android Auto -->
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
@@ -333,9 +340,7 @@
             android:resource="@style/CarTheme" />
         <meta-data
             android:name="com.google.android.gms.car.notification.SmallIcon"
-            android:resource="@drawable/ic_notification" />
-
-        <!-- For auto-storage of locale on Android 12 and lower -->
+            android:resource="@drawable/ic_notification" /> <!-- For auto-storage of locale on Android 12 and lower -->
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
@@ -346,11 +351,4 @@
         </service>
     </application>
 
-    <!--
-    This is not that important, it's just here so that we can query equalizer package
-    and check if it's present on A11+ because of Package visibility restrictions.
-    -->
-    <queries>
-        <package android:name="com.android.musicfx" />
-    </queries>
 </manifest>

@@ -111,6 +111,7 @@ dependencies {
     implementation libs.androidx.palette.ktx
 
     implementation libs.androidx.mediarouter
+    implementation 'androidx.work:work-runtime-ktx:2.8.0-alpha01'
     //Cast Dependencies
     normalImplementation libs.google.play.services.cast.framework
     //WebServer by NanoHttpd
@@ -171,6 +172,7 @@ dependencies {
     implementation libs.fastscroll.library
     implementation libs.customactivityoncrash
     implementation libs.tankery.circularSeekBar
+
 
 //    api project(path: ':AudioTrimmer')
 
