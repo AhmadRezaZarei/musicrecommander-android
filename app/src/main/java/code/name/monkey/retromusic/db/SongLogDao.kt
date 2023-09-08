@@ -12,7 +12,7 @@ interface SongLogDao {
 
     @Query("SELECT * FROM SongLogEntity ORDER BY timestamp DESC LIMIT :limit")
     fun getSongLogEntities(limit: Int): List<SongLogEntity>
-    
+
     @Query("delete from SongLogEntity where id = :idList")
     fun deleteSongLogs(idList: List<Int>)
 

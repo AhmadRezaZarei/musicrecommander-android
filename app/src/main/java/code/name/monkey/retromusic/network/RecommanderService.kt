@@ -2,6 +2,7 @@ package code.name.monkey.retromusic.network
 
 import android.content.Context
 import com.google.gson.annotations.SerializedName
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -18,15 +19,15 @@ import kotlin.collections.ArrayList
 
 private const val PING = "/ping"
 private const val SONG_LOG = "/song/log"
-private const val BASE_URL = "http://192.168.94.224:3500"
+private const val BASE_URL = "http://192.168.1.102:3500"
 private const val SONG_LOGS = "/song/logs"
 
 interface RecommanderService {
 
     @Multipart
     @POST(SONG_LOG)
-    fun uploadSongLog(
-        @Part("file") songFile: RequestBody?,
+    suspend fun uploadSongLog(
+        @Part() songFile: MultipartBody.Part?,
         @Part("id") songId: RequestBody?,
         @Part("title") songTitle: RequestBody?,
         @Part("year") year: RequestBody?,

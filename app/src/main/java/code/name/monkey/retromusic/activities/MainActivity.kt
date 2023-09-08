@@ -44,6 +44,7 @@ import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import org.koin.androidx.scope.activityScope
 
+private const val TAG = "MainActivity"
 class MainActivity : AbsCastActivity() {
     companion object {
         const val TAG = "MainActivity"
@@ -63,6 +64,7 @@ class MainActivity : AbsCastActivity() {
 
         WhatsNewFragment.showChangeLog(this)
 
+        Log.e(TAG, "fdir: " + this.filesDir.absolutePath )
         // upload history
       //  Log.e("MainActivity: ", " " + songs.size)
     }

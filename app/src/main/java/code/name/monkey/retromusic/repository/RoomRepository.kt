@@ -145,7 +145,7 @@ class RealRoomRepository(
     }
 
     override suspend fun getAllSongLogs(): List<SongLogEntity> {
-        return songLogDao.getSongLogEntities()
+        return songLogDao.getSongLogEntities(10)
     }
 
 
