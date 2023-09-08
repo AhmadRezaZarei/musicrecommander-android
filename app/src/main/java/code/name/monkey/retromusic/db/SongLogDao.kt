@@ -10,7 +10,12 @@ interface SongLogDao {
     @Insert
     suspend fun addSongLog(songLog: SongLogEntity): Long
 
-    @Query("SELECT * FROM SongLogEntity")
-    fun getAllSongLogEntities(): List<SongLogEntity>
+    @Query("SELECT * FROM SongLogEntity ORDER BY timestamp DESC LIMIT :limit")
+    fun getSongLogEntities(limit: Int): List<SongLogEntity>
+    
+    @Query("delete from SongLogEntity where id = :idList")
+    fun deleteSongLogs(idList: List<Int>)
+
+
 
 }

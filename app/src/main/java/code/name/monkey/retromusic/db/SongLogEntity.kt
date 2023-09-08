@@ -19,5 +19,5 @@ data class SongLogEntity (
     @ColumnInfo("song_ended_at")
     var songEndAt: Int,
     @ColumnInfo("timestamp")
-    var timestamp: Long
+    var timestamp: Long,
 )

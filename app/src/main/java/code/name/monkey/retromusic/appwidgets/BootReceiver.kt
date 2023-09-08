@@ -21,8 +21,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import code.name.monkey.retromusic.service.MusicService
-import code.name.monkey.retromusic.util.ScheduleUtil
+import code.name.monkey.retromusic.worker.UploadMusicWorker
+import java.util.concurrent.TimeUnit
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -54,10 +58,10 @@ class BootReceiver : BroadcastReceiver() {
             }
         }
 
-
-        // start upload music job service
-        Log.e("BootReceiver", "onReceive: start job")
-        ScheduleUtil.scheduleJob(context)
+        WorkManager.getInstance(context).run {
+            val req = PeriodicWorkRequestBuilder<UploadMusicWorker>(15, TimeUnit.MINUTES).build()
+            val res = this.enqueueUniquePeriodicWork("UPLOAD_MUSIC_WORKER", ExistingPeriodicWorkPolicy.REPLACE, req)
+        }
 
 
     }

@@ -216,40 +216,40 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
     fun onSongLogAdded(log: SongLog) {
         lifecycleScope.launch(Dispatchers.IO) {
             log.song?.let { song ->
+
                 repository.insertSongLog(SongLogEntity(id = 0,song = song, songStartedAt = log.songStartedAt, songEndAt = log.songEndAt, timestamp = log.timestamp))
-
-
-
-                val srv = RecommanderService.invoke()
-                srv.uploadSongLog(
-                    songFile = null,
-                    songId = song.id.toString().toRequestBody("text/plain".toMediaType()),
-                    songTitle = song.title.toRequestBody("text/plain".toMediaType()),
-                    year = song.year.toString().toRequestBody("text/plain".toMediaType()),
-                    duration = song.duration.toString().toRequestBody("text/plain".toMediaType()),
-                    date = song.data.toRequestBody("text/plain".toMediaType()),
-                    albumId = song.albumId.toString().toRequestBody("text/plain".toMediaType()),
-                    albumName = song.albumName.toRequestBody("text/plain".toMediaType()),
-                    composer = song.composer?.toRequestBody("text/plain".toMediaType()),
-                    artistName = song.artistName.toRequestBody("text/plain".toMediaType()),
-                    albumArtist = song.albumArtist?.toRequestBody("text/plain".toMediaType()),
-                    songStartedAt = log.songStartedAt.toString().toRequestBody("text/plain".toMediaType()),
-                    songEndedAt = log.songEndAt.toString().toRequestBody("text/plain".toMediaType()),
-                    timestamp = log.timestamp.toString().toRequestBody("text/plain".toMediaType()),
-                    artistId = song.artistId.toString().toRequestBody()
-                ).enqueue(object: retrofit2.Callback<BaseResponse> {
-                    override fun onResponse(
-                        call: Call<BaseResponse>,
-                        response: Response<BaseResponse>
-                    ) {
-                        Log.e("AbsMusicService", "onResponse: ", )
-                    }
-
-                    override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
-                        Log.e("AbsMusicService", "onFailure: " + t.message)
-                    }
-
-                })
+//
+//                val srv = RecommanderService.invoke()
+//                srv.uploadSongLog(
+//                    songFile = null,
+//                    songId = song.id.toString().toRequestBody("text/plain".toMediaType()),
+//                    songTitle = song.title.toRequestBody("text/plain".toMediaType()),
+//                    year = song.year.toString().toRequestBody("text/plain".toMediaType()),
+//                    duration = song.duration.toString().toRequestBody("text/plain".toMediaType()),
+//                    date = song.data.toRequestBody("text/plain".toMediaType()),
+//                    albumId = song.albumId.toString().toRequestBody("text/plain".toMediaType()),
+//                    albumName = song.albumName.toRequestBody("text/plain".toMediaType()),
+//                    composer = song.composer?.toRequestBody("text/plain".toMediaType()),
+//                    artistName = song.artistName.toRequestBody("text/plain".toMediaType()),
+//                    albumArtist = song.albumArtist?.toRequestBody("text/plain".toMediaType()),
+//                    songStartedAt = log.songStartedAt.toString().toRequestBody("text/plain".toMediaType()),
+//                    songEndedAt = log.songEndAt.toString().toRequestBody("text/plain".toMediaType()),
+//                    timestamp = log.timestamp.toString().toRequestBody("text/plain".toMediaType()),
+//                    artistId = song.artistId.toString().toRequestBody()
+//                ).enqueue(object: retrofit2.Callback<BaseResponse> {
+//                    override fun onResponse(
+//                        call: Call<BaseResponse>,
+//                        response: Response<BaseResponse>
+//                    ) {
+//                        Log.e("AbsMusicService", "onResponse: ", )
+//                    }
+//
+//                    override fun onFailure(call: Call<BaseResponse>, t: Throwable) {
+//                        Log.e("AbsMusicService", "onFailure: " + t.message)
+//                    }
+//
+//                })
+//
             }
         }
 

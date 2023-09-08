@@ -10,7 +10,6 @@ import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.
 import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.PLAYLIST_SONG_COUNT_DESC
 import code.name.monkey.retromusic.helper.SortOrder.PlaylistSortOrder.Companion.PLAYLIST_Z_A
 import code.name.monkey.retromusic.model.Song
-import code.name.monkey.retromusic.model.SongLog
 import code.name.monkey.retromusic.util.PreferenceUtil
 
 
@@ -146,7 +145,7 @@ class RealRoomRepository(
     }
 
     override suspend fun getAllSongLogs(): List<SongLogEntity> {
-        return songLogDao.getAllSongLogEntities()
+        return songLogDao.getSongLogEntities()
     }
 
 

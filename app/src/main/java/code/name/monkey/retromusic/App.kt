@@ -15,7 +15,6 @@
 package code.name.monkey.retromusic
 
 import android.app.Application
-import android.content.IntentFilter
 import androidx.preference.PreferenceManager
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import code.name.monkey.appthemehelper.ThemeStore
@@ -25,7 +24,6 @@ import code.name.monkey.retromusic.activities.MainActivity
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.billing.BillingManager
 import code.name.monkey.retromusic.helper.WallpaperAccentManager
-import code.name.monkey.retromusic.receiver.BootBroadcastReceiver
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

@@ -30,6 +30,7 @@
         android:name="android.permission.BLUETOOTH_CONNECT"
         android:usesPermissionFlags="neverForLocation"
         tools:targetApi="s" />
+
     <!--
     This is not that important, it's just here so that we can query equalizer package
     and check if it's present on A11+ because of Package visibility restrictions.
