@@ -15,7 +15,11 @@
 package code.name.monkey.retromusic
 
 import android.app.Application
+import android.util.Log
 import androidx.preference.PreferenceManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import cat.ereza.customactivityoncrash.config.CaocConfig
 import code.name.monkey.appthemehelper.ThemeStore
 import code.name.monkey.appthemehelper.util.VersionUtils
@@ -24,8 +28,10 @@ import code.name.monkey.retromusic.activities.MainActivity
 import code.name.monkey.retromusic.appshortcuts.DynamicShortcutManager
 import code.name.monkey.retromusic.billing.BillingManager
 import code.name.monkey.retromusic.helper.WallpaperAccentManager
+import code.name.monkey.retromusic.worker.UploadMusicWorker
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import java.util.concurrent.TimeUnit
 
 
 class App : Application() {
@@ -63,11 +69,10 @@ class App : Application() {
         // This will reduce startup time for now playing settings fragment as Preference listener of AbsSlidingMusicPanelActivity won't be called
         PreferenceManager.setDefaultValues(this, R.xml.pref_now_playing_screen, false)
 
-        // register broadcase receivers
-//        val filter = IntentFilter()
-//        filter.addAction(packageName + "android.intent.action.BOOT_COMPLETED")
-//        val myReceiver = BootBroadcastReceiver()
-//        registerReceiver(myReceiver, filter)
+        WorkManager.getInstance(this).run {
+            val req = PeriodicWorkRequestBuilder<UploadMusicWorker>(15, TimeUnit.MINUTES).build()
+            val res = this.enqueueUniquePeriodicWork("UPLOAD_MUSIC_WORKER", ExistingPeriodicWorkPolicy.KEEP, req)
+        }
     }
 
     override fun onTerminate() {

@@ -106,7 +106,7 @@ class MediaSessionCallback(
                 musicService.openQueue(songs, songIndex, true)
             }
         }
-        musicService.play()
+        musicService.play("medaiSessionCallback.kt 109")
     }
 
     override fun onPlayFromSearch(query: String?, extras: Bundle?) {
@@ -144,7 +144,7 @@ class MediaSessionCallback(
 
         musicService.openQueue(songs, 0, true)
 
-        musicService.play()
+        musicService.play("mediaSessionCallback-147")
     }
 
     override fun onPrepare() {
@@ -155,7 +155,7 @@ class MediaSessionCallback(
 
     override fun onPlay() {
         super.onPlay()
-        if (musicService.currentSong != Song.emptySong) musicService.play()
+        if (musicService.currentSong != Song.emptySong) musicService.play("mediaSessionCallback-158")
     }
 
     override fun onPause() {

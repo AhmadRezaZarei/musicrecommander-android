@@ -203,7 +203,7 @@ object MusicPlayerRemote : KoinComponent {
     }
 
     fun resumePlaying() {
-        musicService?.play()
+        musicService?.play("resumePlaying.kt 206")
     }
 
     /**

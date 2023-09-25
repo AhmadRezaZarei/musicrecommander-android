@@ -37,6 +37,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -241,7 +242,7 @@ class MusicService : MediaBrowserServiceCompat(),
                 if (BluetoothDevice.ACTION_ACL_CONNECTED == action && isBluetoothSpeaker) {
                     @Suppress("Deprecation")
                     if (getSystemService<AudioManager>()!!.isBluetoothA2dpOn) {
-                        play()
+                        play("bluetoothReceiver-244")
                     }
                 }
             }
@@ -258,7 +259,7 @@ class MusicService : MediaBrowserServiceCompat(),
                         0 -> pause()
                         // Check whether the current song is empty which means the playing queue hasn't restored yet
                         1 -> if (currentSong != emptySong) {
-                            play()
+                            play("headsetReceive-261")
                         } else {
                             receivedHeadsetConnected = true
                         }
@@ -351,7 +352,7 @@ class MusicService : MediaBrowserServiceCompat(),
                 pause()
                 pausedByZeroVolume = true
             } else if (pausedByZeroVolume && currentVolume >= 1) {
-                play()
+                play("onAudioVolumeChanged")
                 pausedByZeroVolume = false
             }
         }
@@ -677,11 +678,11 @@ class MusicService : MediaBrowserServiceCompat(),
                     ACTION_TOGGLE_PAUSE -> if (isPlaying) {
                         pause()
                     } else {
-                        play()
+                        play("onStartCommand-680")
                     }
 
                     ACTION_PAUSE -> pause()
-                    ACTION_PLAY -> play()
+                    ACTION_PLAY -> play("onStartCommand-684")
                     ACTION_PLAY_PLAYLIST -> playFromPlaylist(intent)
                     ACTION_REWIND -> back(true)
                     ACTION_SKIP -> playNextSong(true)
@@ -791,6 +792,7 @@ class MusicService : MediaBrowserServiceCompat(),
     @Synchronized
     fun openTrackAndPrepareNextAt(position: Int, completion: (success: Boolean) -> Unit) {
         this.position = position
+        // handle change song here // TODO
         openCurrent { success ->
             completion(success)
             if (success) {
@@ -804,8 +806,9 @@ class MusicService : MediaBrowserServiceCompat(),
     fun pause(force: Boolean = false) {
 
 
-
+        Log.e("MusicService", "pause" )
         if (songLog == null) {
+            Log.e("MusicService", "pause-songlog is null")
             songLog = SongLog(currentSong, 0, playbackManager.songProgressMillis, System.currentTimeMillis())
         }
 
@@ -822,9 +825,19 @@ class MusicService : MediaBrowserServiceCompat(),
     var songLog: SongLog? = null
     var lastSongLog: SongLog? = null
     var i = 3;
+    @RequiresApi(VERSION_CODES.N)
     @Synchronized
-    fun play() {
+    fun play(source: String) {
 
+
+        Arrays.stream(Thread.currentThread().stackTrace).forEach { s ->
+            Log.e("MusicService",
+                "\tat " + s.className + "." + s.methodName + "(" + s.fileName + ":" + s
+                    .lineNumber + ")"
+            )
+        }
+
+        Log.e("MusicService", "play: " + source)
         if(songLog == null) {
             songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
         }
@@ -867,7 +880,7 @@ class MusicService : MediaBrowserServiceCompat(),
         serviceScope.launch(if (playbackManager.isLocalPlayback) Default else Main) {
             openTrackAndPrepareNextAt(position) { success ->
                 if (success) {
-                    play()
+                    play("playSongAt-872")
                 } else {
                     runOnUiThread {
                         showToast(R.string.unplayable_file)
@@ -997,7 +1010,7 @@ class MusicService : MediaBrowserServiceCompat(),
                             sendChangeInternal(META_CHANGED)
                         }
                         if (receivedHeadsetConnected) {
-                            play()
+                            play("restoreQueuesAndPositionIfNecessary-1002")
                             receivedHeadsetConnected = false
                         }
                     }
@@ -1273,7 +1286,7 @@ class MusicService : MediaBrowserServiceCompat(),
             if (success) {
                 seek(progress)
                 if (wasPlaying) {
-                    play()
+                    play("resetPlaybackState-1278")
                 } else {
                     pause()
                 }

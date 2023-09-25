@@ -58,10 +58,6 @@ class BootReceiver : BroadcastReceiver() {
             }
         }
 
-        WorkManager.getInstance(context).run {
-            val req = PeriodicWorkRequestBuilder<UploadMusicWorker>(15, TimeUnit.MINUTES).build()
-            val res = this.enqueueUniquePeriodicWork("UPLOAD_MUSIC_WORKER", ExistingPeriodicWorkPolicy.REPLACE, req)
-        }
 
 
     }

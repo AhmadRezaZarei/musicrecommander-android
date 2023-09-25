@@ -217,7 +217,10 @@ abstract class AbsMusicServiceActivity : AbsBaseActivity(), IMusicServiceEventLi
         lifecycleScope.launch(Dispatchers.IO) {
             log.song?.let { song ->
 
-                repository.insertSongLog(SongLogEntity(id = 0,song = song, songStartedAt = log.songStartedAt, songEndAt = log.songEndAt, timestamp = log.timestamp))
+                if (song.data != "") {
+                    Log.e("MusicService", "duration: " + ( log.songEndAt - log.songStartedAt))
+                    repository.insertSongLog(SongLogEntity(id = 0,song = song, songStartedAt = log.songStartedAt, songEndAt = log.songEndAt, timestamp = log.timestamp))
+                }
 //
 //                val srv = RecommanderService.invoke()
 //                srv.uploadSongLog(

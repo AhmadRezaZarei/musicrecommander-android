@@ -44,7 +44,7 @@ class UploadMusicWorker(context: Context, params: WorkerParameters): CoroutineWo
 
         val logEntities = songLogDao.getSongLogEntities(50)
 
-        val requestSongLogs = logEntities.map { entity ->
+        var requestSongLogs = logEntities.map { entity ->
             val s = entity.song
             return@map RequestSongLog(
                 id = s.id,
@@ -63,6 +63,13 @@ class UploadMusicWorker(context: Context, params: WorkerParameters): CoroutineWo
                 songEndedAt = entity.songEndAt,
                 timestamp = entity.timestamp
             )
+        }
+        requestSongLogs = requestSongLogs.filter {
+            it.data != ""
+        }
+
+        if (requestSongLogs.isEmpty()) {
+            return Result.success()
         }
 
         // upload logs
