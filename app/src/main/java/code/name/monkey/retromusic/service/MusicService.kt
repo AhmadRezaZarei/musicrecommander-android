@@ -359,24 +359,28 @@ class MusicService : MediaBrowserServiceCompat(),
     }
 
     fun addSong(position: Int, song: Song) {
+        Log.e("Music#Service", "addSong: called 362")
         playingQueue.add(position, song)
         originalPlayingQueue.add(position, song)
         notifyChange(QUEUE_CHANGED)
     }
 
     fun addSong(song: Song) {
+        Log.e("Music#Service", "addSong: called 369")
         playingQueue.add(song)
         originalPlayingQueue.add(song)
         notifyChange(QUEUE_CHANGED)
     }
 
     fun addSongs(position: Int, songs: List<Song>?) {
+        Log.e("Music#Service", "addSong: called 376")
         playingQueue.addAll(position, songs!!)
         originalPlayingQueue.addAll(position, songs)
         notifyChange(QUEUE_CHANGED)
     }
 
     fun addSongs(songs: List<Song>?) {
+        Log.e("Music#Service", "addSong: called 383")
         playingQueue.addAll(songs!!)
         originalPlayingQueue.addAll(songs)
         notifyChange(QUEUE_CHANGED)
@@ -391,6 +395,7 @@ class MusicService : MediaBrowserServiceCompat(),
     }
 
     fun clearQueue() {
+        Log.e("Music#Service", "clearQueue: called 376")
         playingQueue.clear()
         originalPlayingQueue.clear()
         setPosition(-1)
@@ -561,6 +566,7 @@ class MusicService : MediaBrowserServiceCompat(),
         if (from == to) {
             return
         }
+        Log.e("Music#Service", "moveSong: 569")
         val currentPosition = getPosition()
         val songToMove = playingQueue.removeAt(from)
         playingQueue.add(to, songToMove)
@@ -806,16 +812,25 @@ class MusicService : MediaBrowserServiceCompat(),
     fun pause(force: Boolean = false) {
 
 
-        Log.e("MusicService", "pause" )
+        Log.e("Music#Service", "pause" )
         if (songLog == null) {
-            Log.e("MusicService", "pause-songlog is null")
+            Log.e("Music#Service", "pause-songlog is null")
             songLog = SongLog(currentSong, 0, playbackManager.songProgressMillis, System.currentTimeMillis())
         }
 
-        songLog?.songEndAt = playbackManager.songProgressMillis
-        lastSongLog = songLog
-        notifyChange(SONG_LOG_CREATED)
-        songLog = null
+        if (songLog?.song?.id == currentSong.id) {
+            songLog?.songEndAt = playbackManager.songProgressMillis
+            lastSongLog = songLog
+            notifyChange(SONG_LOG_CREATED)
+            songLog = null
+        } else {
+            Log.e("Music#Service", "different: ")
+            songLog?.songEndAt = songLog!!.songStartedAt + (System.currentTimeMillis() - songLog!!.timestamp).toInt()
+            lastSongLog = songLog
+            notifyChange(SONG_LOG_CREATED)
+            songLog = null
+        }
+
 
         playbackManager.pause(force) {
             notifyChange(PLAY_STATE_CHANGED)
@@ -837,14 +852,12 @@ class MusicService : MediaBrowserServiceCompat(),
             )
         }
 
-        Log.e("MusicService", "play: " + source)
+        Log.e("Music#Service", "play: " + source + " song_id " + currentSong.id)
         if(songLog == null) {
             songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
         }
-        
-        
 
-
+        // On not initialized // TODO
         playbackManager.play { playSongAt(getPosition()) }
         if (notHandledMetaChangedForCurrentTrack) {
             handleChangeInternal(META_CHANGED)
@@ -867,10 +880,14 @@ class MusicService : MediaBrowserServiceCompat(),
         if (songLog == null) {
             songLog = SongLog(currentSong, playbackManager.songProgressMillis, -1, System.currentTimeMillis())
         } else {
-            songLog?.songEndAt = playbackManager.songProgressMillis
-            lastSongLog = songLog
-            notifyChange(SONG_LOG_CREATED)
-            songLog = null
+
+            if (songLog?.song?.id != currentSong.id) {
+                songLog?.songEndAt = songLog!!.songStartedAt + ((System.currentTimeMillis() - (songLog?.timestamp ?: 0)).toInt())
+                lastSongLog = songLog
+                notifyChange(SONG_LOG_CREATED)
+                songLog = null
+            }
+
         }
 
 
@@ -1261,6 +1278,7 @@ class MusicService : MediaBrowserServiceCompat(),
 
     @Synchronized
     private fun openCurrent(completion: (success: Boolean) -> Unit) {
+        Log.e("Music#Service", "@@openCurrent: called")
         val force = if (!trackEndedByCrossfade) {
             true
         } else {
