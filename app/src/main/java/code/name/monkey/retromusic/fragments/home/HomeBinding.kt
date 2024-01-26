@@ -19,4 +19,5 @@ class HomeBinding(
     val recyclerView = homeBinding.homeContent.recyclerView
     val titleWelcome = homeBinding.imageLayout.titleWelcome
     val suggestions = homeBinding.homeContent.suggestions
+    val actionRecomms = homeBinding.homeContent.absPlaylists.actionRecomms
 }

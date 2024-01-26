@@ -133,9 +133,16 @@ class HomeFragment :
             setSharedAxisYTransitions()
         }
 
+
         binding.actionShuffle.setOnClickListener {
             libraryViewModel.shuffleSongs()
         }
+
+        binding.actionRecomms.setOnClickListener {
+            findNavController().navigate(
+                R.id.detailListFragment,
+                bundleOf(EXTRA_PLAYLIST_TYPE to MUSIC_RECOMMS)
+            )        }
 
         binding.history.setOnClickListener {
             findNavController().navigate(

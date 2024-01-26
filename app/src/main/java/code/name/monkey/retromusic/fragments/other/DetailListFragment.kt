@@ -84,6 +84,7 @@ class DetailListFragment : AbsMainActivityFragment(R.layout.fragment_playlist_de
             RECENT_ARTISTS -> loadArtists(R.string.recent_artists, RECENT_ARTISTS)
             TOP_ALBUMS -> loadAlbums(R.string.top_albums, TOP_ALBUMS)
             RECENT_ALBUMS -> loadAlbums(R.string.recent_albums, RECENT_ALBUMS)
+            MUSIC_RECOMMS -> loadRecommendations()
             FAVOURITES -> loadFavorite()
             HISTORY_PLAYLIST -> {
                 loadHistory()
@@ -150,6 +151,9 @@ class DetailListFragment : AbsMainActivityFragment(R.layout.fragment_playlist_de
 
     }
 
+    private fun loadRecommendations() {
+        binding.toolbar.setTitle("Recommendations")
+    }
     private fun loadFavorite() {
         binding.toolbar.setTitle(R.string.favorites)
         val songAdapter = SongAdapter(

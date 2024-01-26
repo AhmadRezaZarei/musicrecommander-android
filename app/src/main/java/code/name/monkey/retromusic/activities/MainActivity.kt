@@ -66,8 +66,8 @@ class MainActivity : AbsCastActivity() {
 
         WhatsNewFragment.showChangeLog(this)
 
-        startActivity(Intent(this@MainActivity, GenderActivity::class.java))
-        Log.e(TAG, "fdir: " + this.filesDir.absolutePath )
+     //   startActivity(Intent(this@MainActivity, GenderActivity::class.java))
+      //  Log.e(TAG, "fdir: " + this.filesDir.absolutePath )
         // upload history
       //  Log.e("MainActivity: ", " " + songs.size)
     }

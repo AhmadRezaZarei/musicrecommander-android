@@ -70,6 +70,12 @@
     </fragment>
 
     <fragment
+        android:id="@+id/recommsFragment"
+        android:name="code.name.monkey.retromusic.fragments.recomms.RecommsFragment"
+        android:label="RecommsFragment"
+        />
+
+    <fragment
         android:id="@+id/action_search"
         android:name="code.name.monkey.retromusic.fragments.search.SearchFragment"
         android:label="SearchFragment"
@@ -126,4 +132,6 @@
     <fragment
         android:id="@+id/lyrics_fragment"
         android:name="code.name.monkey.retromusic.fragments.lyrics.LyricsFragment" />
+
+
 </navigation>
