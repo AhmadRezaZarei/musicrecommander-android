@@ -41,6 +41,7 @@ core_version = "1.10.0-rc01"
 devTools_ksp_version = "1.8.10-1.0.9"
 ben_manes_versoin = "0.46.0"
 slidableactivity = "2.1.0"
+org-jetbrains-kotlin-android = "1.8.10"
 
 
 [libraries]
@@ -129,3 +130,4 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 [plugins]
 github-ben-manes = { id = "com.github.ben-manes.versions", version.ref = "ben_manes_versoin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devTools_ksp_version" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }

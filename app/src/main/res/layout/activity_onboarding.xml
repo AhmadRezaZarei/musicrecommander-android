@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.onboarding.OnboardingActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="What is your favorite \n music genres? 🔥"
+        android:textColor="@color/md_blue_A400"
+        android:textSize="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_pop"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:text="Pop"
+        app:chipMinHeight="40dp"
+        android:textSize="20dp"
+        android:minHeight="50dp"
+        app:chipCornerRadius="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_rock"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Rock"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toEndOf="@+id/chip_pop"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_EDM"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_marginTop="120dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="EDM"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toEndOf="@+id/chip_rock"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_rap"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="96dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Rap"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/chip_pop"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_classic"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="96dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Classical"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toEndOf="@+id/chip_rap"
+        app:layout_constraintTop_toBottomOf="@+id/chip_pop"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_jazz"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Jazz"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chip_rap"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_metal"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Metal"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toEndOf="@+id/chip_jazz"
+        app:layout_constraintTop_toBottomOf="@+id/chip_classic"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_country"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Country"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chip_jazz"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_folk"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Folk"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toEndOf="@+id/chip_metal"
+        app:layout_constraintTop_toBottomOf="@+id/chip_classic"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_latin"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:checkable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:text="Latin"
+        android:textSize="20dp"
+        app:chipCornerRadius="40dp"
+        app:chipMinHeight="40dp"
+        app:chipStrokeWidth="0dp"
+        app:layout_constraintStart_toEndOf="@+id/chip_country"
+        app:layout_constraintTop_toBottomOf="@+id/chip_metal"
+        app:textEndPadding="20dp"
+        app:textStartPadding="20dp" />
+
+    <com.google.android.material.button.MaterialButton
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Next"
+        android:textColor="#fff"
+        android:textSize="18dp"
+        app:backgroundTint="@color/md_blue_A400"
+        app:cornerRadius="40dp"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:layout_height="wrap_content">
+
+    </com.google.android.material.button.MaterialButton>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

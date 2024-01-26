@@ -24,6 +24,8 @@ import androidx.navigation.contains
 import androidx.navigation.ui.setupWithNavController
 import code.name.monkey.retromusic.R
 import code.name.monkey.retromusic.activities.base.AbsCastActivity
+import code.name.monkey.retromusic.activities.onboarding.GenderActivity
+import code.name.monkey.retromusic.activities.onboarding.OnboardingActivity
 import code.name.monkey.retromusic.extensions.*
 import code.name.monkey.retromusic.helper.MusicPlayerRemote
 import code.name.monkey.retromusic.helper.SearchQueryHelper.getSongs
@@ -64,6 +66,7 @@ class MainActivity : AbsCastActivity() {
 
         WhatsNewFragment.showChangeLog(this)
 
+        startActivity(Intent(this@MainActivity, GenderActivity::class.java))
         Log.e(TAG, "fdir: " + this.filesDir.absolutePath )
         // upload history
       //  Log.e("MainActivity: ", " " + songs.size)
